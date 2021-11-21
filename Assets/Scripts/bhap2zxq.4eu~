@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     private int stepCountLv3;
     private int mapSelected;
     private static bool won, lost;
-    private Text tempText;
+    public Text tempText;
     public Text stepCount;
 
     public GameManager(){}
@@ -259,7 +259,7 @@ public class GameManager : MonoBehaviour
         GameObject canvas = GameObject.Find("Canvas");
         tempText = (Text)Instantiate(stepCount);
         tempText.fontSize = 66;
-        tempText.transform.position = new Vector3(867, 473, 0);
+        tempText.transform.position = new Vector3(1400, 662, 0);
         tempText.transform.SetParent(canvas.transform, false);
         tempText.text = steps.ToString();
     }
