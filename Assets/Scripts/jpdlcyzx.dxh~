@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// This is the game map
+// It has the dimension column and row
+// There are different types of area in the board (wall, empty space,
+// player, box, storage)
+// Game map has its own display method
+public class Map : MonoBehaviour
+{
+    // Fields
+    protected int _column, _row;
+    protected string[,] _gamemap;
+
+    // Constructor
+    public Map() { }
+
+    public Map(string[,] gamemap)
+    {
+        this._gamemap = gamemap;
+    }
+
+    public Map(int col, int row, string[,] gamemap)
+    {
+        this._column = col;
+        this._row = row;
+        this._gamemap = gamemap;
+    }
+
+    // Methods
+    public string get_area_type(int x, int y)
+    {
+        return "";
+    }
+
+    public void display_map()
+    {
+
+    }
+    public void reset_map()
+    {
+
+    }
+
+    // Getter and Setter of _column
+    public int column
+    {
+        get { return _column; }
+        set { _column = value; }
+    }
+    // Getter and Setter of _row
+    public int row
+    {
+        get { return _row; }
+        set { _row = value; }
+    }
+    // Getter and Setter of _gamemap
+    public string[,] gamemap
+    {
+        get { return _gamemap; }
+        set { _gamemap = value; }
+    }
+
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}

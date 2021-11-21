@@ -1,0 +1,244 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+// This controls the game logic
+// The game is first initialized with a game map, player location,
+// boxes locations and storage locations
+// and then is controlled by game logic
+// In game logic, player can move in the map
+// and check the winning condition after each move
+// There are two more functions, display game and display winning messages
+
+// Game Starts here
+// There will be a man pushing boxes in order to
+// Put them back in the right place
+// There will be different boxes, pushable or not
+public class GameManager : MonoBehaviour
+{
+
+    // Fields
+    public LevelBuilder levelBuilder;
+    public GameObject nextButton;
+    private Player player;
+    private bool input;
+    private Map gamemap;
+    private int stepCountLv1;
+    private int stepCountLv2;
+    private int stepCountLv3;
+    private int mapSelected;
+
+    public GameManager() 
+    {
+        stepCountLv1 = 1;
+        stepCountLv2 = 8;
+        stepCountLv3 = 150;
+    }
+    /*
+    
+    protected List<Box> boxes;
+
+    // Constructors
+    
+
+    public GameManager(string filename)
+    {
+
+    }
+    // Methods
+    private void initialization()
+    {
+
+    }
+    public void gmae_logic()
+    {
+
+    }
+    public void player_action()
+    {
+
+    }
+    
+    public static void pushLeft()
+    {
+    }
+    public static void pushRIght()
+    {
+    }
+
+    public static void pushUp()
+    {
+    }
+
+    public static void pushDown()
+    {
+    }
+
+    public static void walk()
+    {
+    }
+    public static void is_correct_box_location() { }
+
+    */
+    // Game menu starts in Start()
+    // Start is called before the first frame update
+    void Start()
+    {
+        game_menu(0);
+    }
+
+    public IEnumerator game_menu(int selection) 
+    {
+        nextButton.SetActive(false);
+        //reset_all();
+        string selected;
+        if(selection == 0)
+        {
+            selected = "Menu";
+        }
+        if (SceneManager.sceneCount > 1)
+        {
+            AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync("Menu");
+            while (!asyncUnload.isDone)
+            {
+                yield return null;
+                Debug.Log("UnLoading...");
+            }
+            Debug.Log("Unload Done");
+            Resources.UnloadUnusedAssets();
+        }
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+            Debug.Log("Loading...");
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Menu"));
+        levelBuilder.Build();
+        player = FindObjectOfType<Player>();
+        Debug.Log("Level loaded");
+    }
+
+    public bool win() 
+    {
+        if (IsLevelComplete())
+        {
+
+        }
+        return false;
+    }
+
+    public void lose() 
+    {
+
+    }
+
+    public bool detect_game_end()
+    {
+        return false;
+    }
+
+    // Update is called once per frame
+    public void Update()
+    {
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        moveInput.Normalize();
+        if(moveInput.sqrMagnitude > 0.5)
+        {
+            // For Discrete Movement, once at a time
+            if (input)
+            {
+                input = false;
+                player.move(moveInput);
+                nextButton.SetActive(IsLevelComplete());
+                // Determine if this step causes winning condition
+                if (win())
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+        else
+        {
+            input = true;
+        }
+    }
+
+    public void Nextlevel()
+    {
+        nextButton.SetActive(false);
+        levelBuilder.Nextlevel();
+        StartCoroutine(ResetSceneAsync());
+    }
+
+    public void Map1Selected()
+    {
+        nextButton.SetActive(false);
+        levelBuilder.Nextlevel();
+        StartCoroutine(ResetSceneAsync());
+    }
+
+    public void Map2Selected()
+    {
+        nextButton.SetActive(false);
+        levelBuilder.Nextlevel();
+        StartCoroutine(ResetSceneAsync());
+    }
+
+    public void Map3Selected()
+    {
+        nextButton.SetActive(false);
+        levelBuilder.Nextlevel();
+        StartCoroutine(ResetSceneAsync());
+    }
+
+    public void reset_all()
+    {
+        StartCoroutine(ResetSceneAsync());
+    }
+
+    public bool IsLevelComplete()
+    {
+        Box[] boxes = FindObjectsOfType<Box>();
+        foreach(var box in boxes)
+        {
+            if (!box._onCross)
+            {
+                return false;
+            }
+        }
+        nextButton.SetActive(true);
+        return true;
+    }
+
+    public IEnumerator ResetSceneAsync()
+    {
+        if(SceneManager.sceneCount > 1)
+        {
+            AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync("LevelScene");
+            while (!asyncUnload.isDone)
+            {
+                yield return null;
+                Debug.Log("UnLoading...");
+            }
+            Debug.Log("Unload Done");
+            Resources.UnloadUnusedAssets();
+        }
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LevelScene", LoadSceneMode.Additive);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+            Debug.Log("Loading...");
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("LevelScene"));
+        levelBuilder.Build();
+        player = FindObjectOfType<Player>();
+        Debug.Log("Level loaded");
+    }
+}
